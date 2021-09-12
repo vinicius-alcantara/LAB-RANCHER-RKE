@@ -1,0 +1,92 @@
+Depends:
+Configurar chave pública SSH - (ssh-copy -i id_rsa.pub)
+Install/Download RKE - https://github.com/rancher/rke/releases
+rke config --list-version --all - (Lista as versões do k8s disponíveis)
+yum remove docker-ce -y
+yum install docker-ce-19.03.9-3.el7.x86_64 -y
+sudo usermod -aG docker $USER
+
+Cluster Rancher:
+
+* cluster.yml
+
+nodes:
+  - address: 10.1.203.49
+    user: user
+    kubernetes_version: v1.20.10-rancher1-1
+    hostname_override: node1
+    enable_cri_dockerd: true
+    role: [controlplane, worker, etcd]
+  - address: 10.1.203.54
+    user: user
+    kubernetes_version: v1.20.10-rancher1-1
+    hostname_override: node2
+    enable_cri_dockerd: true
+    role: [controlplane, worker, etcd]
+  - address: 10.1.203.32
+    user: user
+    kubernetes_version: v1.20.10-rancher1-1
+    hostname_override: node3
+    enable_cri_dockerd: true
+    role: [controlplane, worker, etcd]
+
+network:
+  plugin: weave
+
+services:
+  etcd:
+    snapshot: true
+    creation: 6h
+    retention: 24h
+   
+Install Rancher (HELM):
+
+https://rancher.com/docs/rancher/v2.x/en/installation/install-rancher-on-k8s/
+
+Cluster K8S:
+
+* cluster.yml
+
+nodes:
+  - address: 10.1.203.77
+    user: user
+    kubernetes_version: v1.20.10-rancher1-1
+    hostname_override: master1
+    enable_cri_dockerd: true
+    role: [controlplane, etcd]
+  - address: 10.1.203.78
+    user: user
+    kubernetes_version: v1.20.10-rancher1-1
+    hostname_override: master2
+    enable_cri_dockerd: true
+    role: [controlplane, etcd]
+  - address: 10.1.203.79
+    user: user
+    kubernetes_version: v1.20.10-rancher1-1
+    hostname_override: master3
+    enable_cri_dockerd: true
+    role: [controlplane, etcd]
+  - address: 10.1.203.80
+    user: user
+    kubernetes_version: v1.20.10-rancher1-1
+    hostname_override: worker1
+    enable_cri_dockerd: true
+    role: [worker]
+  - address: 10.1.203.81
+    user: user
+    kubernetes_version: v1.20.10-rancher1-1
+    hostname_override: worker2
+    enable_cri_dockerd: true
+    role: [worker]
+
+network:
+  plugin: weave
+
+services:
+  etcd:
+    snapshot: true
+    creation: 6h
+    retention: 24h
+
+
+  
